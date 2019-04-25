@@ -48,6 +48,7 @@ class Network(Layer):
                 - ndim
                 - dtype
         trainable (boolean)
+        dtype
         input_shape
         output_shape
         weights (list of variables)
@@ -95,7 +96,7 @@ class Network(Layer):
             # Subclassed network
             self._init_subclassed_network(**kwargs)
 
-    def _base_init(self, name=None):
+    def _base_init(self, name=None, trainable=True, dtype=None):
         # The following are implemented as property functions:
         # self.trainable_weights
         # self.non_trainable_weights
@@ -112,7 +113,10 @@ class Network(Layer):
         # This acts just like the `trainable` attribute of any layer instance.
         # It does not affect users of the underlying layers, only users of the
         # Network instance.
-        self.trainable = True
+        self.trainable = trainable
+        if dtype is None:
+            dtype = K.floatx()
+        self.dtype = dtype
         self._is_compiled = False
         self._expects_training_arg = False
         self._initial_weights = None
